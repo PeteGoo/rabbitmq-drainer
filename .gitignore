@@ -17,3 +17,5 @@
 rabbitmq-drainer
 
 out/*
+
+.DS_Store
