@@ -58,12 +58,12 @@ func main() {
 func PrintDefaults() {
 	fmt.Println("send, drain or receive command expected.")
 	fmt.Println("usage: ")
-	fmt.Println("  rabbit-drainer <send|receive|drain> -h")
+	fmt.Println("  rabbitmq-drainer <send|receive|drain> -h")
 	fmt.Println("")
 	fmt.Println("examples: ")
-	fmt.Println("  rabbit-drainer send -queue=hello -message=\"Hello World\" -count 10000")
-	fmt.Println("  rabbit-drainer receive -queue=hello -count=1")
-	fmt.Println("  rabbit-drainer drain -queue=hello -concurrency 10 -dwell 1")
+	fmt.Println("  rabbitmq-drainer send -queue=hello -message=\"Hello World\" -count 10000")
+	fmt.Println("  rabbitmq-drainer receive -queue=hello -count=1")
+	fmt.Println("  rabbitmq-drainer drain -queue=hello -concurrency 10 -dwell 1")
 
 }
 

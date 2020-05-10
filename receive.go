@@ -33,13 +33,13 @@ func receive(connString string, queue *string, count *int) {
 	failOnError(err, "Failed to set QoS")
 
 	msgs, err := ch.Consume(
-		q.Name, // queue
-		"rabbit-drainer:receive", // consumer
-		false, // auto-ack
-		false, // exclusive
-		false, // no-local
-		false, // no-wait
-		nil,   // args
+		q.Name,                     // queue
+		"rabbitmq-drainer:receive", // consumer
+		false,                      // auto-ack
+		false,                      // exclusive
+		false,                      // no-local
+		false,                      // no-wait
+		nil,                        // args
 	)
 	failOnError(err, "Failed to register a consumer")
 
