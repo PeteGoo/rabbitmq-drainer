@@ -12,6 +12,8 @@ type DefaultFlags struct {
 	rabbitUser *string
 	rabbitPass *string
 	queue      *string
+	durable    *bool
+	verbose    *bool
 }
 
 func main() {
@@ -37,17 +39,17 @@ func main() {
 		defaultFlags := addDefaultFlags(sendCmd)
 		sendCmd.Parse(os.Args[2:])
 		rabbitConn := makeConnString(defaultFlags)
-		send(rabbitConn, defaultFlags.queue, *message, *sendCount)
+		send(rabbitConn, defaultFlags.queue, *message, *sendCount, defaultFlags.durable, defaultFlags.verbose)
 	case "drain":
 		defaultFlags := addDefaultFlags(drainCmd)
 		drainCmd.Parse(os.Args[2:])
 		rabbitConn := makeConnString(defaultFlags)
-		drain(rabbitConn, defaultFlags.queue, drainConcurrency, drainDwell)
+		drain(rabbitConn, defaultFlags.queue, drainConcurrency, drainDwell, defaultFlags.durable, defaultFlags.verbose)
 	case "receive":
 		defaultFlags := addDefaultFlags(receiveCmd)
 		receiveCmd.Parse(os.Args[2:])
 		rabbitConn := makeConnString(defaultFlags)
-		receive(rabbitConn, defaultFlags.queue, receiveCount)
+		receive(rabbitConn, defaultFlags.queue, receiveCount, defaultFlags.durable, defaultFlags.verbose)
 	default:
 		flag.PrintDefaults()
 		os.Exit(1)
@@ -73,6 +75,8 @@ func addDefaultFlags(flagSet *flag.FlagSet) DefaultFlags {
 	rabbitUser := flagSet.String("user", "guest", "The username. e.g. user=guest")
 	rabbitPass := flagSet.String("pass", "guest", "The password. e.g. pass=guest")
 	queue := flagSet.String("queue", "", "The queue name. e.g. queue=hello")
+	durable := flagSet.Bool("durable", false, "Whether the queue is durable. e.g. -durable")
+	verbose := flagSet.Bool("verbose", false, "Whether the output is verbose. e.g. -verbose")
 
 	return DefaultFlags{
 		rabbitHost,
@@ -80,6 +84,8 @@ func addDefaultFlags(flagSet *flag.FlagSet) DefaultFlags {
 		rabbitUser,
 		rabbitPass,
 		queue,
+		durable,
+		verbose,
 	}
 }
 

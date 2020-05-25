@@ -13,7 +13,7 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func drain(connString string, queue *string, concurrency *int, dwell *int) {
+func drain(connString string, queue *string, concurrency *int, dwell *int, durable *bool, verbose *bool) {
 	log.Printf("Draining messages from queue %s", *queue)
 
 	conn, err := amqp.Dial(connString)
@@ -25,12 +25,12 @@ func drain(connString string, queue *string, concurrency *int, dwell *int) {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		*queue, // name
-		false,  // durable
-		false,  // delete when unused
-		false,  // exclusive
-		false,  // no-wait
-		nil,    // arguments
+		*queue,   // name
+		*durable, // durable
+		false,    // delete when unused
+		false,    // exclusive
+		false,    // no-wait
+		nil,      // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
@@ -58,7 +58,9 @@ func drain(connString string, queue *string, concurrency *int, dwell *int) {
 	go func() {
 		for msg := range msgs {
 			go func(msg amqp.Delivery) {
-				log.Printf("Received message %s", msg.MessageId)
+				if *verbose {
+					log.Printf("Received message %s", msg.MessageId)
+				}
 				if *dwell > 0 {
 					time.Sleep(time.Duration(*dwell) * time.Millisecond)
 				}

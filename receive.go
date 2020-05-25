@@ -6,7 +6,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func receive(connString string, queue *string, count *int) {
+func receive(connString string, queue *string, count *int, durable *bool, verbose *bool) {
 	conn, err := amqp.Dial(connString)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -16,12 +16,12 @@ func receive(connString string, queue *string, count *int) {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		*queue, // name
-		false,  // durable
-		false,  // delete when unused
-		false,  // exclusive
-		false,  // no-wait
-		nil,    // arguments
+		*queue,   // name
+		*durable, // durable
+		false,    // delete when unused
+		false,    // exclusive
+		false,    // no-wait
+		nil,      // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
